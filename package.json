@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "An Experience sharing platform of interviews",
   "type": "module",
-  "main": "./main/index.js",
+  "main": "src/index.js",
   "keywords": [
     "javascript"
   ],
   "author": "Lokendra Kumar",
   "license": "ISC",
   "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+    "start": "node -r dotenv/config --experimental-json-modules src/index.js"
   },
   "dependencies": {
     "axios": "^1.6.2",
