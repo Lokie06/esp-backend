@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "An Experience sharing platform of interviews",
   "type": "module",
-  "main": "main/index.js",
+  "main": "./main/index.js",
   "keywords": [
     "javascript"
   ],
