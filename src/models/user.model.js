@@ -31,7 +31,10 @@ const userSchema = new Schema(
       required: [true, "Please provide a username"],
       unique: true,
     },
-
+    cuBatch: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
       enum: ["admin", "user"],

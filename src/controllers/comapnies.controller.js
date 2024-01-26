@@ -2,6 +2,7 @@ import { Article } from "../models/article.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asynHandler.js";
 
+
 const getAllCompanies = asyncHandler(async (req, res) => {
   const allCompanies = await Article.find({ isVerified: true }).sort({
     companyName: 1,
