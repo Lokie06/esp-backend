@@ -6,8 +6,17 @@ import { ApiError } from "../utils/ApiError.js";
 import { mailReceived } from "./mail.controller.js";
 
 const postArticle = asyncHandler(async (req, res) => {
-  const { title, companyName, fullName, showName, description, tags, email } =
-    req.body;
+  const {
+    title,
+    companyName,
+    fullName,
+    showName,
+    description,
+    tags,
+    email,
+    userImage,
+  } = req.body;
+
 
   const response = await axios.get(
     `https://autocomplete.clearbit.com/v1/companies/suggest?query=${companyName}`
@@ -30,14 +39,14 @@ const postArticle = asyncHandler(async (req, res) => {
     description,
     tags,
     email,
+    userImage,
   });
 
   // Verification
-  try {
-    const res = await mailReceived(email, fullName, title); 
-    console.log('mail', res);
-  } catch (error) {
-    console.error("Error sending verification email", error);
+  const mailResponse = await mailReceived(email, fullName, title);
+
+  if (!mailResponse) {
+    throw new ApiError(500, "Error sending verification email");
   }
 
   return res
