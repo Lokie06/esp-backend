@@ -39,7 +39,7 @@ const articleSchema = Schema(
     },
     isVerified: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     showName: {
       type: Boolean,

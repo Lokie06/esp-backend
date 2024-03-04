@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asynHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import axios from "axios";
 import { ApiError } from "../utils/ApiError.js";
+import { mailReceived } from "./mail.controller.js";
 
 const postArticle = asyncHandler(async (req, res) => {
   const { title, companyName, fullName, showName, description, tags, email } =
@@ -32,6 +33,12 @@ const postArticle = asyncHandler(async (req, res) => {
   });
 
   // Verification
+  try {
+    const res = await mailReceived(email, fullName, title); 
+    console.log('mail', res);
+  } catch (error) {
+    console.error("Error sending verification email", error);
+  }
 
   return res
     .status(201)
@@ -52,7 +59,7 @@ const getSingleArticle = asyncHandler(async (req, res) => {
   const article = await Article.find({
     _id: req.params.articleId,
     isVerified: true,
-  }).select('-__v -companyDomainName -updatedAt -isVerified');
+  }).select("-__v -companyDomainName -updatedAt -isVerified");
 
   if (article.length === 0) {
     throw new ApiError(400, `No article with found !!`);
