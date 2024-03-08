@@ -7,6 +7,7 @@ import companiesRoute from "./routes/companies.routes.js";
 import authRoute from "./routes/auth.routes.js";
 import feedbackRoute from "./routes/feedback.routes.js";
 import mailRoutes from "./routes/mail.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 import { errHandler } from "./middlewares/errorHandler.middleware.js";
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/v1/companies", companiesRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/feedback", feedbackRoute);
 app.use("/api/v1/mailer", mailRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hii From Server of ESP");

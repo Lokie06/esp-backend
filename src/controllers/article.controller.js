@@ -17,7 +17,6 @@ const postArticle = asyncHandler(async (req, res) => {
     userImage,
   } = req.body;
 
-
   const response = await axios.get(
     `https://autocomplete.clearbit.com/v1/companies/suggest?query=${companyName}`
   );
@@ -58,10 +57,9 @@ const getAllArticles = asyncHandler(async (req, res) => {
   const articles = await Article.find({ isVerified: true })
     .sort({ _id: -1 })
     .limit(10);
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, articles, "All Articles Fetched"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, articles, "All Articles Fetched"));
 });
 
 const getSingleArticle = asyncHandler(async (req, res) => {
@@ -73,10 +71,9 @@ const getSingleArticle = asyncHandler(async (req, res) => {
   if (article.length === 0) {
     throw new ApiError(400, `No article with found !!`);
   }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, article, "Read Full Article!!"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, article, "Read Full Article!!"));
 });
 
 const getArticleByTags = asyncHandler(async (req, res) => {

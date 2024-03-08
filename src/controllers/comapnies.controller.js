@@ -2,7 +2,6 @@ import { Article } from "../models/article.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asynHandler.js";
 
-
 const getAllCompanies = asyncHandler(async (req, res) => {
   const allCompanies = await Article.find({ isVerified: true }).sort({
     companyName: 1,
@@ -33,12 +32,11 @@ const getCompanyArticles = asyncHandler(async (req, res) => {
     companyName: req.params.companyName,
     isVerified: true,
   }).sort({ _id: -1 });
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(201, articles, `${req.params.companyName}'s articles`)
-    );
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(201, articles, `${req.params.companyName}'s articles`)
+      );
 });
 
 export { getAllCompanies, getCompanyArticles };
