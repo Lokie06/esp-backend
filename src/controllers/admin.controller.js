@@ -1,4 +1,6 @@
+import { REDIS_EXPIRATION } from "../config/index.js";
 import { Article } from "../models/article.model.js";
+import redisClient from "../redis/index.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asynHandler.js";
@@ -29,6 +31,17 @@ const verifyArticle = asyncHandler(async (req, res) => {
 
   if (!id) {
     return next(new ApiError(500, "No ID in param"));
+  }
+
+  const cached_article = await redisClient.get(`article_${id}`);
+  if (cached_article) {
+    let new_article = await JSON.parse(cached_article);
+    new_article.isVerified = true;
+    await redisClient.setEx(
+      `article_${id}`,
+      REDIS_EXPIRATION,
+      JSON.stringify(new_article)
+    );
   }
 
   const updatedArticle = await Article.findByIdAndUpdate(

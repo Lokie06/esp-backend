@@ -8,9 +8,6 @@ dotenv.config({
 });
 
 connectDB()
-  .then(async () => {
-    await redisClient.connect();
-  })
   .then(() => {
     app.listen(PORT || 8000, () => {
       console.log(`⚙️  Server is running at port : ${PORT}`);

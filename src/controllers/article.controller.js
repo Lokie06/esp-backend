@@ -4,6 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import axios from "axios";
 import { ApiError } from "../utils/ApiError.js";
 import { mailReceived } from "./mail.controller.js";
+import redisClient from "../redis/index.js";
+import { REDIS_EXPIRATION } from "../config/index.js";
 
 const postArticle = asyncHandler(async (req, res) => {
   const {
@@ -41,6 +43,10 @@ const postArticle = asyncHandler(async (req, res) => {
     userImage,
   });
 
+  const redisKey = `article_${article._id}`;
+
+  redisClient.setEx(redisKey, REDIS_EXPIRATION, JSON.stringify(article));
+
   // Verification
   const mailResponse = await mailReceived(email, fullName, title);
 
@@ -57,12 +63,23 @@ const getAllArticles = asyncHandler(async (req, res) => {
   const articles = await Article.find({ isVerified: true })
     .sort({ _id: -1 })
     .limit(10);
-    return res
-      .status(200)
-      .json(new ApiResponse(200, articles, "All Articles Fetched"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, articles, "All Articles Fetched"));
 });
 
 const getSingleArticle = asyncHandler(async (req, res) => {
+  const cached_article = await redisClient.get(
+    `article_${req.params.articleId}`
+  );
+  const parsed_article = JSON.parse(cached_article);
+  
+  if (parsed_article?.isVerified === true) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, [parsed_article], "Read Full Article!!"));
+  }
+
   const article = await Article.find({
     _id: req.params.articleId,
     isVerified: true,
@@ -71,9 +88,9 @@ const getSingleArticle = asyncHandler(async (req, res) => {
   if (article.length === 0) {
     throw new ApiError(400, `No article with found !!`);
   }
-    return res
-      .status(200)
-      .json(new ApiResponse(200, article, "Read Full Article!!"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, article, "Read Full Article!!"));
 });
 
 const getArticleByTags = asyncHandler(async (req, res) => {

@@ -58,7 +58,7 @@ const sendConfirmation = async (email, user, articleTitle) => {
     outro: "You can check your article on our platform",
   };
 
-  const subject = "Article Verified Received";
+  const subject = "Congratulations!! Article Verified";
   try {
     const mailSent = await sendMail(email, subject, mailBody);
     if (mailSent) {
